@@ -1,43 +1,17 @@
 <template>
   <div id="cookbook">
-    <div class="food-card">
-      <div class="food-card__image">
-        <img src="https://hips.hearstapps.com/hmg-prod/images/delish-191908-cauliflower-pizza-0390-landscape-pf-1568654348.jpg" alt="Pizza" />
-      </div>
-      <div class="food-card__details">
-        <span class="food-card__name">Pizza</span>
-        <span class="food-card__desc">Fresh & sweet</span>       
-        <div class="food-card__price">£50</div>
-        <div class="food-card__rating">
-           <el-rate value="5" disabled></el-rate>
+    <div v-for="item in cookbookList" :key="item.dish_id" class="cookbook-list">
+      <div class="food-card">
+        <div class="food-card__image">
+          <img :src="item.dish_image" />
         </div>
-      </div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-card__image">
-        <img src="https://i.ytimg.com/vi/3n87Tbu5A9M/maxresdefault.jpg" alt="Chicken" />
-      </div>
-      <div class="food-card__details">
-        <span class="food-card__name">Chicken</span>
-        <span class="food-card__desc">Fried to crisp</span>
-        <div class="food-card__price">£82</div>
-        <div class="food-card__rating">
-          <el-rate value="4" disabled></el-rate>
-        </div>
-      </div>
-    </div>
-
-    <div class="food-card">
-      <div class="food-card__image">
-        <img src="https://cdn-b.william-reed.com/var/wrbm_gb_hospitality/storage/images/publications/hospitality/morningadvertiser.co.uk/article/2018/09/05/4-coffee-trends-that-are-hot-right-now/2907246-1-eng-GB/4-coffee-trends-that-are-hot-right-now_wrbm_large.jpg" alt="Coffee" />
-      </div>
-      <div class="food-card__details">
-        <span class="food-card__name">Coffee</span>
-        <span class="food-card__desc">Anyhow</span>
-        <div class="food-card__price">£5</div>
-        <div class="food-card__rating">
-          <el-rate value="3" disabled></el-rate>
+        <div class="food-card__details">
+          <span class="food-card__name">{{item.dish_name}}</span>
+          <span class="food-card__desc">{{item.dish_description}}</span>       
+          <div class="food-card__price">￥{{item.dish_price}}</div>
+          <div class="food-card__rating">
+            <el-rate :value="item.dish_difficulty" disabled></el-rate>
+          </div>
         </div>
       </div>
     </div>
@@ -45,12 +19,20 @@
 </template>
 
 <script>
+import {getDishList} from "network/cookbook.js";
+
 export default {
   name: "cookbook",
   data () {
     return {
-      value1: 4
+      cookbookList: []
     }
+  },
+
+  created() {
+    getDishList().then(res => {
+      this.cookbookList = res.data.data;
+    })
   }
 }
 </script>
@@ -65,8 +47,6 @@ export default {
   transform-style: preserve-3d;
   transform: rotateX(22deg) rotate(-14deg) rotateY(17deg) translateZ(30px);
   transition: transform .8s;
-  margin: 50px;
-  cursor: pointer;
 }
   
 .food-card:hover {
@@ -130,6 +110,11 @@ export default {
   grid-column: 2;
   grid-row: 2;
   text-align: right;
+}
+
+.cookbook-list {
+  margin: 50px;
+  cursor: pointer;
 }
 
 #cookbook {
