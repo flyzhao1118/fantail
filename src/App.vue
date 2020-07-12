@@ -8,25 +8,35 @@
   </div>
 </template>
 
+<script>
+  export default {
+    name: 'App',
+    components: {
+    },
+    created() {
+      // 根据实际窗口高度大小定义vh
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+      // 监听浏览器窗口高度大小变化
+      window.addEventListener('resize', () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`)
+      })
+
+      // 根据实际窗口宽度大小定义vw
+      let vw = window.innerWidth * 0.01;
+      document.documentElement.style.setProperty('--vw', `${vw}px`);
+
+      // 监听浏览器窗口宽度大小变化
+      window.addEventListener('resize', () => {
+        let vw = window.innerWidth * 0.01;
+        document.documentElement.style.setProperty('--vw', `${vw}px`)
+      })
+    },
+  }
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+@import "./assets/css/base.css";
 </style>
