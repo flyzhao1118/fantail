@@ -1,5 +1,5 @@
 <template>
-  <div id="cookbook">
+  <div id="cookbookList">
     <div v-for="item in cookbookList" :key="item.dish_id" class="cookbook-list">
       <div class="food-card">
         <div class="food-card__image">
@@ -10,6 +10,7 @@
           <span class="food-card__desc">{{item.dish_description}}</span>       
           <div class="food-card__price">￥{{item.dish_price}}</div>
           <div class="food-card__rating">
+            <div>难度</div>
             <el-rate :value="item.dish_difficulty" disabled></el-rate>
           </div>
         </div>
@@ -19,20 +20,10 @@
 </template>
 
 <script>
-import {getDishList} from "network/cookbook.js";
-
 export default {
-  name: "cookbook",
-  data () {
-    return {
-      cookbookList: []
-    }
-  },
-
-  created() {
-    getDishList().then(res => {
-      this.cookbookList = res.data.data;
-    })
+  name: "cookbookList",
+  props: {
+    cookbookList: Array
   }
 }
 </script>
@@ -50,7 +41,7 @@ export default {
 }
   
 .food-card:hover {
-  transform: translateZ(30px);
+  transform: rotate(0deg);
 }
 
 .food-card:hover img {
@@ -76,8 +67,8 @@ export default {
   
 .food-card__details {
   display: grid;
-  grid-row-gap: 8px;
-  grid-template: 1fr 1fr / 1fr 1fr;
+  grid-row-gap: 28px;
+  grid-template: 1fr 1fr / 1fr 2fr;
   padding: 8px 30px 20px;
 }
   
@@ -109,7 +100,10 @@ export default {
 .food-card__rating {
   grid-column: 2;
   grid-row: 2;
-  text-align: right;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
 }
 
 .cookbook-list {
@@ -117,11 +111,12 @@ export default {
   cursor: pointer;
 }
 
-#cookbook {
+#cookbookList {
   font-family: 'Montserrat', sans-serif;
   perspective: 2000px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
 }
 </style>

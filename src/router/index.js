@@ -8,7 +8,7 @@ Vue.use(VueRouter)
   {
     path: '/cookbook',
     name: 'cookbook',
-    component: () => import('../views/cookbook.vue')
+    component: () => import('../views/cookbook/cookbook')
   }
 ]
 
