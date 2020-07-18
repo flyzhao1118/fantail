@@ -2,6 +2,21 @@
   <div id="calendar">
     <div class="container">
       <div class="left">
+        <div class="location">
+          <div class="icon"><i class="el-icon-location-outline"></i></div>
+          <div class="city">{{province}} {{city}}</div>
+        </div>
+        <div class="temp">{{weather.wendu}}<span>&#8451;</span></div>
+        <div class="forecast">
+          <div>今天: {{getTodayWeather}}</div>
+          <div>明天: {{getTomorrowWeather}}</div>
+        </div>
+        <div class="cold">
+          <div class="icon"><i class="el-icon-magic-stick"></i></div>
+          <div class="prompt">{{weather.ganmao}}</div>
+        </div>
+      </div>
+      <div class="middle">
         <div class="week">{{currentDay.week}}</div>
         <div class="day">{{currentDay.day}}</div>
         <div class="time">{{time}}</div>
@@ -36,7 +51,10 @@ export default {
       days: [],
       currentDay: {year: "", month: "", day: "", week: ""},
       currentTime: {hour: "", minute: "", second: ""},
-      timer: ""
+      timer: "",
+      city: "",
+      province: "",
+      weather: {}
     }
   },
 
@@ -53,6 +71,18 @@ export default {
 
     time() {
       return this.currentTime.hour + ":" + this.currentTime.minute + ":" + this.currentTime.second
+    },
+
+    getTodayWeather() {
+      const today = this.weather.forecast[0];
+      return today.type + " " + today.low.slice(3) + "~" + today.high.slice(3) + " " + 
+            today.fengxiang + today.fengli.slice(9, 11)
+    },
+
+    getTomorrowWeather() {
+      const today = this.weather.forecast[1];
+      return today.type + " " + today.low.slice(3) + "~" + today.high.slice(3) + " " + 
+            today.fengxiang + today.fengli.slice(9, 11)
     }
   },
 
@@ -89,6 +119,24 @@ export default {
       this.currentTime.hour = now.getHours().toString().padStart(2, "0");
       this.currentTime.minute = now.getMinutes().toString().padStart(2, "0");
       this.currentTime.second = now.getSeconds().toString().padStart(2, "0");
+    },
+
+    getLocation() {
+      const cityCode=returnCitySN.cid;
+      this.province = returnCitySN.cname.slice(0, 3);
+      this.city = returnCitySN.cname.slice(3)
+    },
+
+    getWeather() {
+      this.$axios.get("http://wthrcdn.etouch.cn/weather_mini?city=" + this.city)
+        .then(res => {     
+          if(res.data.desc == "OK") {
+            this.weather = res.data.data;
+          }    
+        })      
+        .catch(error => {        
+          console.log(error);      
+        })
     }
   },
 
@@ -104,6 +152,8 @@ export default {
     this.getDays();
     this.getTime();
     this.timer = setInterval(this.getTime, 1000);
+    this.getLocation();
+    this.getWeather()
   },
 
   beforeDestroy() {
@@ -115,48 +165,105 @@ export default {
 <style scoped>
   #calendar {
     background-color: darkcyan;
-    padding: 30px;
+    padding: 30px 65px;
     height: 460px;
-    width: 760px;
+    width: 1075px;
   }
 
   .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 700px;
+    width: 945px;
     height: 400px;
-    padding: 0 35px;
   }
 
   .left {
-    display: inline-block;
-    width: 350px;
+    width: 315px;
+    height: 400px;
+    vertical-align: top;
+    text-align: center;
+    background-color: white;
+    transform: rotateY(25deg) rotateZ(10deg);
+  }
+
+  .left .location {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(33, 165, 165);
+    font-size: 25px;
+    line-height: 80px;
+  }
+
+  .left .location .city {
+    margin: 0 10px;
+  }
+
+  .left .temp {
+    font-size: 110px;
+    line-height: 110px;
+    color: tomato;
+  }
+
+  .left .temp span {
+    font-size: 40px;
+    position: relative;
+    bottom: 40px;
+  }
+
+  .left .forecast > div {
+    line-height: 30px;
+    font-size: 20px;
+    color: darkturquoise;
+  }
+
+  .left .cold {
+    line-height: 25px;
+    padding: 20px 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: left;
+    font-size: 20px;
+  }
+
+  .left .cold .icon {
+    color: deeppink;
+    margin-right: 15px;
+  }
+
+  .left .cold .prompt {
+    color: rgb(247, 4, 134);
+    font-style: oblique;
+  }
+
+  .middle {
+    width: 315px;
     height: 400px;
     vertical-align: top;
     text-align: center;
     background-color: rgb(75, 218, 218);
   }
 
-  .left .week {
+  .middle .week {
     font-size: 35px;
     color: white;
     line-height: 100px;
   }
 
-  .left .day {
+  .middle .day {
     font-size: 180px;
     color: white;
   }
 
-  .left .time {
+  .middle .time {
     font-size: 50px;
     color: white;
   }
 
   .right {
-    display: inline-block;
-    width: 350px;
+    width: 315px;
     height: 400px;
     text-align: center;
     background-color: white;
