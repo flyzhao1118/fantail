@@ -51,7 +51,8 @@ export default {
       days: [],
       currentDay: {year: "", month: "", day: "", week: ""},
       currentTime: {hour: "", minute: "", second: ""},
-      timer: "",
+      calendarTimer: "",
+      weatherTimer: "",
       city: "",
       province: "",
       weather: {}
@@ -74,15 +75,19 @@ export default {
     },
 
     getTodayWeather() {
-      const today = this.weather.forecast[0];
-      return today.type + " " + today.low.slice(3) + "~" + today.high.slice(3) + " " + 
+      if (this.weather.forecast != undefined) {
+        const today = this.weather.forecast[0];
+        return today.type + " " + today.low.slice(3) + "~" + today.high.slice(3) + " " + 
             today.fengxiang + today.fengli.slice(9, 11)
+      }
     },
 
     getTomorrowWeather() {
-      const today = this.weather.forecast[1];
-      return today.type + " " + today.low.slice(3) + "~" + today.high.slice(3) + " " + 
+      if (this.weather.forecast != undefined) {
+        const today = this.weather.forecast[1];
+        return today.type + " " + today.low.slice(3) + "~" + today.high.slice(3) + " " + 
             today.fengxiang + today.fengli.slice(9, 11)
+      }
     }
   },
 
@@ -151,13 +156,15 @@ export default {
   created() {
     this.getDays();
     this.getTime();
-    this.timer = setInterval(this.getTime, 1000);
+    this.calendarTimer = setInterval(this.getTime, 1000);
+    this.weatherTimer = setInterval(this.getWeather, 1000*60*60);
     this.getLocation();
     this.getWeather()
   },
 
   beforeDestroy() {
-    clearInterval(this.timer);
+    clearInterval(this.calendarTimer);
+    clearInterval(this.weatherTimer);
   }
 }
 </script>
