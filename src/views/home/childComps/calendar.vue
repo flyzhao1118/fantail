@@ -94,11 +94,11 @@ export default {
   methods: {
     getDays() {
       const now = new Date();
-      const weekConvert = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"];
+      const weekConvert = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
       this.currentDay.year = now.getFullYear();
       this.currentDay.month = now.getMonth()  + 1;
       this.currentDay.day = now.getDate();
-      this.currentDay.week = weekConvert[now.getDay() - 1];
+      this.currentDay.week = weekConvert[now.getDay()];
       let days = [];
       const day1 = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
       if (day1 != 7) {
@@ -146,7 +146,7 @@ export default {
   },
 
   watch: {
-    time(oldTime, newTime) {
+    time(newTime, oldTime) {
       if (newTime == "00:00:00") {
         this.getDays();
       }
@@ -157,7 +157,7 @@ export default {
     this.getDays();
     this.getTime();
     this.calendarTimer = setInterval(this.getTime, 1000);
-    this.weatherTimer = setInterval(this.getWeather, 1000*60*60);
+    this.weatherTimer = setInterval(this.getWeather, 1000*60*30);
     this.getLocation();
     this.getWeather()
   },
