@@ -149,6 +149,7 @@ export default {
     time(newTime, oldTime) {
       if (newTime == "00:00:00") {
         this.getDays();
+        this.getWeather()
       }
     }
   },
